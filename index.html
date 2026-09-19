@@ -33,15 +33,15 @@
     @keyframes flashIn{from{background:#2a2d34}to{background:#6a5a12;transform:scale(1.06)}}
     .tl{top:12px;left:12px}.tr{top:12px;right:12px}.bl{bottom:12px;left:12px}.br{bottom:12px;right:12px}
 
-    .game{width:min(92vw,520px);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
-    .title{font-weight:1000;font-size:clamp(28px,8vw,52px);letter-spacing:1px;text-align:center;line-height:.95;text-shadow:0 4px 0 rgba(0,0,0,.25)}
-    .subtitle{color:var(--muted);font-weight:700;text-align:center;font-size:clamp(12px,3.4vw,17px)}
-    .promptCard{width:100%;background:linear-gradient(180deg,#23262d,#191b20);border-radius:22px;padding:14px 16px;box-shadow:var(--shadow);text-align:center;border:1px solid rgba(255,255,255,.07)}
-    .promptLabel{color:var(--accent);font-size:12px;font-weight:1000;letter-spacing:1.6px;text-transform:uppercase}
+    .game{width:min(94vw,560px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;z-index:2}
+    .title{font-weight:1000;font-size:clamp(34px,9vw,58px);letter-spacing:1px;text-align:center;line-height:.95;text-shadow:0 4px 0 rgba(0,0,0,.25)}
+    .subtitle{color:var(--muted);font-weight:700;text-align:center;font-size:clamp(14px,3.8vw,19px)}
+    .promptCard{width:100%;background:linear-gradient(180deg,#23262d,#191b20);border-radius:22px;padding:12px 16px;box-shadow:var(--shadow);text-align:center;border:1px solid rgba(255,255,255,.07)}
+    .promptLabel{color:var(--accent);font-size:clamp(12px,3.3vw,15px);font-weight:1000;letter-spacing:1.2px;text-transform:uppercase}
     .prompt{font-size:clamp(18px,4.8vw,28px);font-weight:900;line-height:1.15;margin-top:6px}
     .holding{font-size:clamp(15px,4vw,22px);font-weight:1000;color:#fff;text-align:center;min-height:1.4em}
 
-    .bombWrap{position:relative;width:min(46vw,230px);aspect-ratio:1/1;display:grid;place-items:center;margin:0 auto}
+    .bombWrap{position:relative;width:min(62vw,300px,31vh);aspect-ratio:1/1;display:grid;place-items:center;margin:0 auto}
     .bomb{width:92%;height:92%;filter:drop-shadow(0 16px 16px rgba(0,0,0,.5));transform-origin:50% 58%;animation:idleBob 2.6s ease-in-out infinite}
     .bomb.lit{animation:litWobble .55s ease-in-out infinite}
     .bomb.danger2{animation:dangerWobble .28s ease-in-out infinite}
@@ -60,10 +60,9 @@
     .bomb.danger3 .face-mouth{transform:translateY(4px) scale(.82)}
 
     .passBtn,.primaryBtn,.secondaryBtn{border:0;border-radius:20px;font-weight:1000;letter-spacing:.3px;box-shadow:0 8px 0 rgba(0,0,0,.25),var(--shadow);cursor:pointer}
-    .passBtn{width:100%;padding:17px 20px;font-size:clamp(20px,5vw,30px);background:linear-gradient(180deg,#ffd85a,#ffb72f);color:#171717}
+    .passBtn{width:min(44vw,185px,21vh);aspect-ratio:1/1;padding:14px;border-radius:50%;display:grid;place-items:center;text-align:center;line-height:1.02;font-size:clamp(20px,5.3vw,28px);background:linear-gradient(180deg,#ffe06b,#ffb72f);color:#171717;border:4px solid rgba(255,255,255,.16);box-shadow:0 10px 0 rgba(0,0,0,.28),0 0 28px rgba(255,196,60,.18),var(--shadow)}
     .passBtn:active,.primaryBtn:active,.secondaryBtn:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.25)}
     .passBtn:disabled{opacity:.45;filter:grayscale(.6)}
-    .mini{color:var(--muted);font-size:12px;font-weight:700;text-align:center;min-height:1.2em}
 
     .overlay{position:fixed;inset:0;background:rgba(7,8,10,.86);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px;z-index:20}
     .overlay.hidden{display:none}
@@ -80,7 +79,9 @@
     @keyframes screenShake{0%,100%{transform:translate(0)}20%{transform:translate(-6px,4px)}40%{transform:translate(7px,-3px)}60%{transform:translate(-5px,-4px)}80%{transform:translate(5px,3px)}}
     .flashScreen::before{content:"";position:fixed;inset:0;background:#fff;z-index:50;pointer-events:none;animation:flashScreen .25s forwards}
     @keyframes flashScreen{from{opacity:.9}to{opacity:0}}
-    @media (max-height:700px){.promptCard{padding:10px 12px}.bombWrap{width:min(38vw,180px)}.game{gap:6px}.corner{padding:7px 9px}.passBtn{padding:13px 16px}}
+    .instructions{font-size:clamp(15px,4vw,18px);text-align:left;line-height:1.45;color:var(--muted);font-weight:700;margin:12px 0 4px}
+    .instructions strong{color:#fff}
+    @media (max-height:760px){.promptCard{padding:9px 12px}.prompt{font-size:clamp(17px,4.4vw,24px)}.bombWrap{width:min(54vw,235px,27vh)}.game{gap:5px}.corner{padding:7px 9px}.passBtn{width:min(38vw,155px,19vh);font-size:clamp(18px,4.8vw,24px)}.holding{font-size:clamp(14px,3.7vw,19px)}}
   </style>
 </head>
 <body>
@@ -91,11 +92,8 @@
     <div class="corner br" data-player="Xenia"><div class="name">Xenia</div><div class="lives"></div></div>
 
     <section class="game">
-      <div class="title">💣 BATTLE BOMB</div>
-      <div class="subtitle">Don’t be left holding the bomb when it explodes.</div>
-
       <div class="promptCard">
-        <div class="promptLabel">Your challenge</div>
+        <div class="promptLabel">ANSWER AS QUICK AS YOU CAN</div>
         <div class="prompt" id="prompt">Tap START GAME to begin.</div>
       </div>
 
@@ -142,8 +140,7 @@
         </svg>
       </div>
 
-      <button class="passBtn" id="passBtn" disabled>PASS THE BOMB</button>
-      <div class="mini" id="hint">The first tap lights the fuse.</div>
+      <button class="passBtn" id="passBtn" disabled>PASS<br>THE BOMB</button>
     </section>
   </main>
 
@@ -151,8 +148,24 @@
     <div class="modal">
       <h1>💣</h1>
       <h2>BATTLE BOMB</h2>
-      <p>Emma, Zander, Jim and Xenia each have 3 lives. Give an answer, then tap <b>PASS THE BOMB</b>. The first pass lights the fuse. If it explodes while you’re holding it, you lose a life. Last player alive wins.</p>
+      <p><strong>Don’t be left holding the bomb when it explodes.</strong></p>
       <button class="primaryBtn" id="startBtn">START GAME</button>
+      <button class="secondaryBtn" id="instructionsBtn">HOW TO PLAY</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="instructionsOverlay">
+    <div class="modal">
+      <h2>HOW TO PLAY</h2>
+      <div class="instructions">
+        <p><strong>1.</strong> Everyone starts with ❤️❤️❤️.</p>
+        <p><strong>2.</strong> The highlighted player answers the prompt first.</p>
+        <p><strong>3.</strong> After answering, tap <strong>PASS THE BOMB</strong>. The first pass lights the fuse.</p>
+        <p><strong>4.</strong> Keep answering and passing as quickly as you can.</p>
+        <p><strong>5.</strong> If the bomb explodes while you’re holding it, you lose a life.</p>
+        <p><strong>6.</strong> Lose all 3 lives and you’re out. Last player standing wins.</p>
+      </div>
+      <button class="primaryBtn" id="backBtn">BACK</button>
     </div>
   </div>
 
@@ -213,9 +226,11 @@
   const passBtn = document.getElementById('passBtn');
   const promptEl = document.getElementById('prompt');
   const holdingEl = document.getElementById('holding');
-  const hintEl = document.getElementById('hint');
   const startOverlay = document.getElementById('startOverlay');
   const startBtn = document.getElementById('startBtn');
+  const instructionsBtn = document.getElementById('instructionsBtn');
+  const instructionsOverlay = document.getElementById('instructionsOverlay');
+  const backBtn = document.getElementById('backBtn');
   const resultOverlay = document.getElementById('resultOverlay');
   const resultTitle = document.getElementById('resultTitle');
   const resultText = document.getElementById('resultText');
@@ -280,7 +295,6 @@
     currentIndex = randomAliveIndex();
     promptEl.textContent = nextPrompt();
     setHoldingText();
-    hintEl.textContent = 'The first tap lights the fuse.';
     passBtn.disabled = false;
     bomb.className.baseVal = 'bomb';
     spark.classList.add('off');
@@ -320,7 +334,6 @@
   function igniteFuse(){
     spark.classList.remove('off');
     bomb.classList.add('lit');
-    hintEl.textContent = 'Fuse is live — keep it moving!';
     playIgniteSound();
     vibrate(35);
 
@@ -426,6 +439,8 @@
   function vibrate(pattern){ if(navigator.vibrate) navigator.vibrate(pattern); }
 
   passBtn.addEventListener('click',passBomb);
+  instructionsBtn.addEventListener('click',()=>instructionsOverlay.classList.remove('hidden'));
+  backBtn.addEventListener('click',()=>instructionsOverlay.classList.add('hidden'));
   startBtn.addEventListener('click',()=>{
     ensureAudio();
     startOverlay.classList.add('hidden');
