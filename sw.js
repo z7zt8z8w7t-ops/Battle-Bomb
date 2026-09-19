@@ -1,4 +1,4 @@
-const CACHE = 'battle-bomb-v5';
+const CACHE = 'battle-bomb-v6';
 const ASSETS = ['./index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', event => {

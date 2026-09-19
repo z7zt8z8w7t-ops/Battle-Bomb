@@ -19,11 +19,11 @@
       --shadow:0 10px 30px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;height:100%;background:radial-gradient(circle at 50% 30%,#20232a 0,#111318 40%,#0d0e11 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
+    html,body{margin:0;height:100%;background:radial-gradient(circle at 50% 30%,#20232a 0,#111318 40%,#0d0e11 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;transition:background .7s ease}body.dangerBg1{background:radial-gradient(circle at 50% 34%,#3a2022 0,#1b1215 43%,#0f0d0f 100%)}body.dangerBg2{background:radial-gradient(circle at 50% 36%,#5a2024 0,#2c1115 48%,#120b0d 100%)}body.dangerBg3{background:radial-gradient(circle at 50% 38%,#8b2529 0,#471216 52%,#17090b 100%)}
     button{font:inherit}
     .versionTag{position:fixed;right:8px;bottom:6px;font-size:10px;font-weight:800;letter-spacing:.5px;color:rgba(255,255,255,.38);z-index:99;pointer-events:none}
     .app{position:relative;height:100%;min-height:100dvh;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .corner{position:absolute;width:min(36vw,170px);padding:10px 12px;border-radius:18px;background:linear-gradient(180deg,#20232a,#17191e);box-shadow:var(--shadow);border:2px solid transparent;text-align:center;transition:.2s ease;z-index:5}
+    .corner{position:absolute;width:min(36vw,170px);padding:10px 12px;border-radius:18px;background:linear-gradient(180deg,#5a171b,#2b0c0f);box-shadow:var(--shadow);border:2px solid transparent;text-align:center;transition:.2s ease;z-index:5}
     .corner .name{font-size:clamp(16px,4vw,24px);font-weight:900;letter-spacing:.4px;text-transform:uppercase}
     .corner .lives{margin-top:4px;min-height:24px;display:flex;justify-content:center;align-items:center;gap:4px}.lifeBomb{width:clamp(20px,5vw,28px);height:clamp(20px,5vw,28px);overflow:visible;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));transition:transform .2s ease,filter .35s ease,opacity .35s ease}.lifeBomb.burnt{filter:grayscale(1) brightness(.38) contrast(1.2);opacity:.55;transform:scale(.9)}.lifeBomb.justBurnt{animation:burnLife .7s ease forwards}@keyframes burnLife{0%{transform:scale(1);filter:brightness(1)}28%{transform:scale(1.35) rotate(-8deg);filter:brightness(2) sepia(1) saturate(3)}58%{transform:scale(.85) rotate(5deg);filter:grayscale(.5) brightness(.7)}100%{transform:scale(.9);filter:grayscale(1) brightness(.38) contrast(1.2);opacity:.55}}
     .corner.out{opacity:.35;filter:grayscale(1)}
@@ -31,7 +31,7 @@
     .corner.active{border-color:var(--accent);box-shadow:0 0 0 4px rgba(255,216,90,.08),0 0 24px rgba(255,216,90,.45),var(--shadow);animation:activePulse 1s infinite alternate}
     .corner.flash{animation:flashIn .22s 2 alternate}
     @keyframes activePulse{from{transform:scale(1)}to{transform:scale(1.035)}}
-    @keyframes flashIn{from{background:#2a2d34}to{background:#6a5a12;transform:scale(1.06)}}
+    @keyframes flashIn{from{background:#5a171b}to{background:#8b2d1f;transform:scale(1.06)}}
     .tl{top:12px;left:12px}.tr{top:12px;right:12px}.bl{bottom:12px;left:12px}.br{bottom:12px;right:12px}
 
     .game{width:min(98vw,640px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;z-index:2;padding-top:74px;padding-bottom:68px}
@@ -86,7 +86,7 @@
   </style>
 </head>
 <body>
-  <div class="versionTag">v5</div>
+  <div class="versionTag">v6</div>
   <main class="app" id="app">
     <div class="corner tl" data-player="Emma"><div class="name">Emma</div><div class="lives"></div></div>
     <div class="corner tr" data-player="Zander"><div class="name">Zander</div><div class="lives"></div></div>
@@ -380,6 +380,7 @@
     promptEl.textContent = nextPrompt();
     setHoldingText();
     bomb.className.baseVal = 'bomb';
+    document.body.classList.remove('dangerBg1','dangerBg2','dangerBg3');
     spark.classList.add('off');
     renderPlayers();
     flashActive();
@@ -421,12 +422,17 @@
     vibrate(35);
 
     const total = 14000 + Math.random()*14000; // 14-28 sec
+    document.body.classList.add('dangerBg1');
     danger1Timer = setTimeout(()=>{
+      document.body.classList.remove('dangerBg1');
+      document.body.classList.add('dangerBg2');
       bomb.classList.add('danger2');
       tickSpeed = 520;
       startTicking();
     }, total*0.42);
     danger2Timer = setTimeout(()=>{
+      document.body.classList.remove('dangerBg2');
+      document.body.classList.add('dangerBg3');
       bomb.classList.remove('danger2');
       bomb.classList.add('danger3');
       tickSpeed = 310;
@@ -440,6 +446,7 @@
   function explode(){
     if(!roundLive) return;
     roundLive = false;
+    document.body.classList.remove('dangerBg1','dangerBg2','dangerBg3');
     clearAllTimers(false);
     const aboutToBeOut = players[currentIndex].lives === 1;
     const finalBlast = aboutToBeOut && alivePlayers().length === 2;
@@ -514,8 +521,30 @@
     tone(720,.11,'sawtooth',.025,.035);
   }
   function playPassSound(){
-    tone(210,.045,'triangle',.025);
-    tone(300,.045,'triangle',.018,.035);
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    // Quick airy whoosh so a pass feels physical without competing with the ticking.
+    const dur = .16;
+    const len = Math.floor(audioCtx.sampleRate * dur);
+    const b = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+    const d = b.getChannelData(0);
+    for(let i=0;i<len;i++){
+      const x=i/len;
+      const env=Math.sin(Math.PI*x)*Math.pow(1-x,.45);
+      d[i]=(Math.random()*2-1)*env;
+    }
+    const src=audioCtx.createBufferSource();
+    const bp=audioCtx.createBiquadFilter();
+    const g=audioCtx.createGain();
+    bp.type='bandpass'; bp.Q.value=.8;
+    bp.frequency.setValueAtTime(1350,now);
+    bp.frequency.exponentialRampToValueAtTime(420,now+dur);
+    g.gain.setValueAtTime(.0001,now);
+    g.gain.exponentialRampToValueAtTime(.07,now+.018);
+    g.gain.exponentialRampToValueAtTime(.0001,now+dur);
+    src.buffer=b; src.connect(bp); bp.connect(g); g.connect(audioCtx.destination); src.start(now);
+    // Tiny landing thud at the end of the pass.
+    tone(105,.055,'sine',.035,.11);
   }
   function playMechanicalTick(){
     ensureAudio();
