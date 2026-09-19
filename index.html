@@ -34,10 +34,10 @@
     @keyframes flashIn{from{background:#5a171b}to{background:#8b2d1f;transform:scale(1.06)}}
     .tl{top:12px;left:12px}.tr{top:12px;right:12px}.bl{bottom:12px;left:12px}.br{bottom:12px;right:12px}
 
-    .game{width:min(98vw,640px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;z-index:2;padding-top:74px;padding-bottom:68px}
+    .game{width:min(98vw,640px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;z-index:2;padding-top:92px;padding-bottom:68px}
     .title{font-weight:1000;font-size:clamp(34px,9vw,58px);letter-spacing:1px;text-align:center;line-height:.95;text-shadow:0 4px 0 rgba(0,0,0,.25)}
     .subtitle{color:var(--muted);font-weight:700;text-align:center;font-size:clamp(14px,3.8vw,19px)}
-    .promptCard{width:min(94%,570px);background:linear-gradient(180deg,#23262d,#191b20);border-radius:20px;padding:9px 13px;box-shadow:var(--shadow);text-align:center;border:1px solid rgba(255,255,255,.07);margin-top:0}
+    .promptCard{width:min(94%,570px);background:transparent;border-radius:0;padding:0 8px;box-shadow:none;text-align:center;border:0;margin-top:0}
     .prompt{font-size:clamp(18px,4.8vw,28px);font-weight:900;line-height:1.15;margin-top:6px}
     .holding{font-size:clamp(15px,4vw,22px);font-weight:1000;color:#fff;text-align:center;min-height:1.25em;margin-top:1px}
 
@@ -81,12 +81,19 @@
     .flashScreen::before{content:"";position:fixed;inset:0;background:#fff;z-index:50;pointer-events:none;animation:flashScreen .25s forwards}
     @keyframes flashScreen{from{opacity:.9}to{opacity:0}}
     .instructions{font-size:clamp(15px,4vw,18px);text-align:left;line-height:1.45;color:var(--muted);font-weight:700;margin:12px 0 4px}
+
+    .defuseBtn{position:fixed;z-index:18;border:0;border-radius:999px;padding:14px 20px;font-weight:1000;font-size:clamp(15px,4vw,20px);letter-spacing:.5px;background:linear-gradient(180deg,#8cff9a,#35d45b);color:#09230f;box-shadow:0 0 0 4px rgba(92,255,123,.18),0 10px 24px rgba(0,0,0,.38);animation:defusePop .55s ease-in-out infinite alternate;cursor:pointer}
+    .defuseBtn.hidden{display:none}
+    @keyframes defusePop{from{transform:scale(1)}to{transform:scale(1.08)}}
+    .lifeChoiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+    .lifeChoiceBtn{border:0;border-radius:18px;padding:18px 12px;font-size:clamp(18px,5vw,24px);font-weight:1000;background:linear-gradient(180deg,#5a171b,#2b0c0f);color:white;box-shadow:var(--shadow);cursor:pointer}
+    .lifeChoiceBtn:active{transform:scale(.97)}
     .instructions strong{color:#fff}
-    @media (max-height:760px){.game{padding-top:68px;padding-bottom:58px;gap:1px}.promptCard{padding:7px 10px}.prompt{font-size:clamp(16px,4.15vw,23px)}.bombWrap{width:min(98vw,520px);height:min(98vw,520px);max-width:calc(100dvh - 202px);max-height:calc(100dvh - 202px)}.corner{padding:7px 9px}.holding{font-size:clamp(14px,3.7vw,19px)}.tapHint{margin-top:-12px}}
+    @media (max-height:760px){.game{padding-top:84px;padding-bottom:58px;gap:1px}.promptCard{padding:0 8px}.prompt{font-size:clamp(16px,4.15vw,23px)}.bombWrap{width:min(98vw,520px);height:min(98vw,520px);max-width:calc(100dvh - 202px);max-height:calc(100dvh - 202px)}.corner{padding:7px 9px}.holding{font-size:clamp(14px,3.7vw,19px)}.tapHint{margin-top:-12px}}
   </style>
 </head>
 <body>
-  <div class="versionTag">v6</div>
+  <div class="versionTag">v7</div>
   <main class="app" id="app">
     <div class="corner tl" data-player="Emma"><div class="name">Emma</div><div class="lives"></div></div>
     <div class="corner tr" data-player="Zander"><div class="name">Zander</div><div class="lives"></div></div>
@@ -144,6 +151,8 @@
     </section>
   </main>
 
+  <button class="defuseBtn hidden" id="defuseBtn" aria-label="Defuse the bomb">DEFUSE!</button>
+
   <div class="overlay" id="startOverlay">
     <div class="modal">
       <h1>💣</h1>
@@ -163,9 +172,18 @@
         <p><strong>3.</strong> After answering, <strong>tap the bomb</strong> to pass it to the next player. The first pass lights the fuse.</p>
         <p><strong>4.</strong> Keep answering and tapping the bomb to pass it on.</p>
         <p><strong>5.</strong> If the bomb explodes while you’re holding it, you lose a life.</p>
-        <p><strong>6.</strong> Lose all 3 lives and you’re out. Last player standing wins.</p>
+        <p><strong>6.</strong> Lose all 3 lives and you’re out. Last player standing wins. The fuse gets shorter as players are eliminated.</p>
+        <p><strong>7.</strong> If a surprise <strong>DEFUSE!</strong> button appears, tap it quickly. You can give one surviving player an extra life (up to 3), then a fresh round begins.</p>
       </div>
       <button class="primaryBtn" id="backBtn">BACK</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="defuseOverlay">
+    <div class="modal">
+      <h2>WHO GETS THE EXTRA LIFE?</h2>
+      <p>Choose a player who is still in the game and has fewer than 3 lives.</p>
+      <div class="lifeChoiceGrid" id="lifeChoiceGrid"></div>
     </div>
   </div>
 
@@ -306,6 +324,9 @@
   const resultText = document.getElementById('resultText');
   const resultSub = document.getElementById('resultSub');
   const nextBtn = document.getElementById('nextBtn');
+  const defuseBtn = document.getElementById('defuseBtn');
+  const defuseOverlay = document.getElementById('defuseOverlay');
+  const lifeChoiceGrid = document.getElementById('lifeChoiceGrid');
 
   let currentIndex = 0;
   let fuseStarted = false;
@@ -313,6 +334,8 @@
   let fuseTimer = null;
   let danger1Timer = null;
   let danger2Timer = null;
+  let defuseTimer = null;
+  let defuseHideTimer = null;
   let promptBag = [];
   let gameOver = false;
   let audioCtx = null;
@@ -382,6 +405,8 @@
     bomb.className.baseVal = 'bomb';
     document.body.classList.remove('dangerBg1','dangerBg2','dangerBg3');
     spark.classList.add('off');
+    defuseBtn.classList.add('hidden');
+    defuseOverlay.classList.add('hidden');
     renderPlayers();
     flashActive();
   }
@@ -415,13 +440,50 @@
     ],{duration:240,easing:'cubic-bezier(.2,.8,.3,1)'});
   }
 
+  function fuseDurationForCurrentGame(){
+    const count = alivePlayers().length;
+    if(count <= 2) return 8000 + Math.random()*8000;   // 8-16 sec
+    if(count === 3) return 11000 + Math.random()*11000; // 11-22 sec
+    return 14000 + Math.random()*14000; // 14-28 sec
+  }
+
+  function scheduleDefuse(total){
+    clearTimeout(defuseTimer);
+    clearTimeout(defuseHideTimer);
+    defuseBtn.classList.add('hidden');
+    const eligible = alivePlayers().filter(p => p.lives < 3);
+    if(!eligible.length) return;
+    if(Math.random() > 0.14) return; // rare surprise: ~14% of live rounds
+    const appearAt = total * (0.28 + Math.random()*0.42);
+    defuseTimer = setTimeout(()=>{
+      if(!roundLive || !fuseStarted) return;
+      const rectW = 118, rectH = 56;
+      const margin = 18;
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const maxX = Math.max(margin, vw - rectW - margin);
+      const maxY = Math.max(margin, vh - rectH - margin);
+      let x, y, attempts=0;
+      do {
+        x = margin + Math.random()*(maxX-margin);
+        y = Math.max(90, margin + Math.random()*(maxY-margin));
+        attempts++;
+      } while(attempts < 12 && y > vh*0.34 && y < vh*0.74 && x > vw*0.18 && x < vw*0.82);
+      defuseBtn.style.left = `${x}px`;
+      defuseBtn.style.top = `${y}px`;
+      defuseBtn.classList.remove('hidden');
+      vibrate([30,30,30]);
+      defuseHideTimer = setTimeout(()=>defuseBtn.classList.add('hidden'), 1800);
+    }, appearAt);
+  }
+
   function igniteFuse(){
     spark.classList.remove('off');
     bomb.classList.add('lit');
     playIgniteSound();
     vibrate(35);
 
-    const total = 14000 + Math.random()*14000; // 14-28 sec
+    const total = fuseDurationForCurrentGame();
+    scheduleDefuse(total);
     document.body.classList.add('dangerBg1');
     danger1Timer = setTimeout(()=>{
       document.body.classList.remove('dangerBg1');
@@ -446,6 +508,7 @@
   function explode(){
     if(!roundLive) return;
     roundLive = false;
+    defuseBtn.classList.add('hidden');
     document.body.classList.remove('dangerBg1','dangerBg2','dangerBg3');
     clearAllTimers(false);
     const aboutToBeOut = players[currentIndex].lives === 1;
@@ -496,8 +559,8 @@
   }
 
   function clearAllTimers(stopTick=true){
-    clearTimeout(fuseTimer);clearTimeout(danger1Timer);clearTimeout(danger2Timer);
-    fuseTimer=danger1Timer=danger2Timer=null;
+    clearTimeout(fuseTimer);clearTimeout(danger1Timer);clearTimeout(danger2Timer);clearTimeout(defuseTimer);clearTimeout(defuseHideTimer);
+    fuseTimer=danger1Timer=danger2Timer=defuseTimer=defuseHideTimer=null;
     if(stopTick){clearInterval(tickInterval);tickInterval=null;}
   }
 
@@ -588,7 +651,7 @@
     clearInterval(tickInterval); tickInterval=null;
     const now = audioCtx.currentTime;
     const impact = now + .085; // tiny dead-silent gap before detonation
-    const strength = kind==='final' ? 1.18 : (kind==='elimination' ? 1.08 : 1);
+    const strength = kind==='final' ? 1.34 : (kind==='elimination' ? 1.22 : 1.14);
 
     // Initial supersonic-style crack: very short, bright transient.
     const crackLen = Math.floor(audioCtx.sampleRate * .035);
@@ -631,10 +694,10 @@
     const sub=audioCtx.createOscillator();
     const subGain=audioCtx.createGain();
     sub.type='sine';
-    sub.frequency.setValueAtTime(82,impact);
-    sub.frequency.exponentialRampToValueAtTime(29,impact+.72);
+    sub.frequency.setValueAtTime(72,impact);
+    sub.frequency.exponentialRampToValueAtTime(24,impact+.82);
     subGain.gain.setValueAtTime(.0001,impact);
-    subGain.gain.exponentialRampToValueAtTime(.42*strength,impact+.015);
+    subGain.gain.exponentialRampToValueAtTime(.52*strength,impact+.015);
     subGain.gain.exponentialRampToValueAtTime(.0001,impact+.86);
     sub.connect(subGain); subGain.connect(audioCtx.destination);
     sub.start(impact); sub.stop(impact+.9);
@@ -670,6 +733,42 @@
   }
   function vibrate(pattern){ if(navigator.vibrate) navigator.vibrate(pattern); }
 
+  function openDefuseChoice(){
+    if(!roundLive || defuseBtn.classList.contains('hidden')) return;
+    defuseBtn.classList.add('hidden');
+    clearAllTimers();
+    roundLive = false;
+    fuseStarted = false;
+    document.body.classList.remove('dangerBg1','dangerBg2','dangerBg3');
+    bomb.classList.remove('lit','danger2','danger3','explode');
+    spark.classList.add('off');
+    lifeChoiceGrid.innerHTML = '';
+    players.forEach((p)=>{
+      if(p.out || p.lives >= 3) return;
+      const btn = document.createElement('button');
+      btn.className = 'lifeChoiceBtn';
+      btn.textContent = `${p.name.toUpperCase()}  •  ${p.lives}/3`;
+      btn.addEventListener('click',()=>awardExtraLife(p));
+      lifeChoiceGrid.appendChild(btn);
+    });
+    if(!lifeChoiceGrid.children.length){
+      beginRound();
+      return;
+    }
+    defuseOverlay.classList.remove('hidden');
+  }
+
+  function awardExtraLife(player){
+    if(player.out || player.lives >= 3) return;
+    player.lives = Math.min(3, player.lives + 1);
+    renderPlayers();
+    playIgniteSound();
+    vibrate([35,25,55]);
+    defuseOverlay.classList.add('hidden');
+    beginRound(); // defuse ends the old round: fresh prompt, safe bomb
+  }
+
+  defuseBtn.addEventListener('click',openDefuseChoice);
   bombTap.addEventListener('click',passBomb);
   bombTap.addEventListener('keydown',e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); passBomb(); } });
   instructionsBtn.addEventListener('click',()=>instructionsOverlay.classList.remove('hidden'));
